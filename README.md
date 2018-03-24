@@ -3,7 +3,7 @@ Takes a detailed xml report from the Veracode platform and generates a CSV file 
 
 The Veracode Help Center provides guidance on how to retrieve the detailed xml report here: https://help.veracode.com/reader/DGHxSJy3Gn3gtuSIN2jkRQ/wtJ0ZMLZcYuRd22PmK5vxg
 
-This is a built for the .NET Framework if Windows users don't want to have to install the .NET Core Runtime
+This is a build for .NET Framework, for Windows users who don't want to have to install the .NET Core Runtime
 
 ## Usage
 ``` Dipsy.VeracodeReport.Converter -i <input filename> [-o <output filename>] [-f]```
