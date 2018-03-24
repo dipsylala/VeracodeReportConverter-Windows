@@ -3,12 +3,10 @@ Takes a detailed xml report from the Veracode platform and generates a CSV file 
 
 The Veracode Help Center provides guidance on how to retrieve the detailed xml report here: https://help.veracode.com/reader/DGHxSJy3Gn3gtuSIN2jkRQ/wtJ0ZMLZcYuRd22PmK5vxg
 
-If you don't want the standalone version, you need .NET Core Runtime 2 - available here for your OS: https://www.microsoft.com/net/download/Windows/run
-
-The standalone release is as an exe but contains the whole Runtime as well, hence the size.
+This is a built for the .NET Framework if Windows users don't want to have to install the .NET Core Runtime
 
 ## Usage
-``` dotnet Dipsy.VeracodeReport.Converter.dll -i <input filename> [-o <output filename>] [-f]```
+``` Dipsy.VeracodeReport.Converter -i <input filename> [-o <output filename>] [-f]```
 
 * -i, --input     Required. Detailed XML file to be processed
 * -o, --output    Output filename
@@ -18,6 +16,6 @@ The standalone release is as an exe but contains the whole Runtime as well, henc
 
 ## Examples
 
-``` dotnet Dipsy.VeracodeReport.Converter.dll -i LoadValidFileTest.xml```
+``` Dipsy.VeracodeReport.Converter -i LoadValidFileTest.xml```
 
-```dotnet Dipsy.VeracodeReport.Converter.dll -i LoadValidFileTest.xml -o myoutput.csv```
+``` Dipsy.VeracodeReport.Converter -i LoadValidFileTest.xml -o myoutput.csv```
