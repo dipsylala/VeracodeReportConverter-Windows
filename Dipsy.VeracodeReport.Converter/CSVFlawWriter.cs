@@ -33,17 +33,23 @@ namespace Dipsy.VeracodeReport.Converter
 
             using (var outFile = new StreamWriter(outputFilename, false, Encoding.UTF8))
             {
-                this.WriteHeader(outFile);
-                foreach (var severity in detailedXml.severity)
+                this.Write(outFile, detailedXml, includeFixed);
+            }
+        }
+
+        public void Write(TextWriter outFile, detailedreport detailedXml, bool includeFixed)
+        {
+            // Separated so that we can mock the Writer (and caller might have their own TextWriter derivative)
+            this.WriteHeader(outFile);
+            foreach (var severity in detailedXml.severity)
+            {
+                foreach (var category in severity.category)
                 {
-                    foreach (var category in severity.category)
+                    foreach (var cwe in category.cwe)
                     {
-                        foreach (var cwe in category.cwe)
-                        {
-                            this.WriteFlawsToFile(cwe.staticflaws, outFile, includeFixed);
-                            this.WriteFlawsToFile(cwe.dynamicflaws, outFile, includeFixed);
-                            this.WriteFlawsToFile(cwe.manualflaws, outFile, includeFixed);
-                        }
+                        this.WriteFlawsToFile(cwe.staticflaws, outFile, includeFixed);
+                        this.WriteFlawsToFile(cwe.dynamicflaws, outFile, includeFixed);
+                        this.WriteFlawsToFile(cwe.manualflaws, outFile, includeFixed);
                     }
                 }
             }
@@ -63,7 +69,7 @@ namespace Dipsy.VeracodeReport.Converter
             return string.Join(MitigationSeparator, mitigations.Select(x => $"{x.date} ({x.user}) - {x.action}\n{x.description.TrimEnd('\n')}\n"));
         }
 
-        private void WriteFlawsToFile(IEnumerable<FlawType> flaws, StreamWriter outFile, bool includeFixed)
+        private void WriteFlawsToFile(IEnumerable<FlawType> flaws, TextWriter outFile, bool includeFixed)
         {
             foreach (var flaw in flaws.Where(x => includeFixed || x.remediation_status != "Fixed"))
             {

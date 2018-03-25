@@ -7,11 +7,11 @@ namespace Dipsy.VeracodeReport.Converter.UnitTests
     [TestClass]
     public class LoaderTests
     {
-        [TestMethod, DeploymentItem("./xsd/LoadValidFileTest.xml")]
+        [TestMethod, DeploymentItem("./xml/LoadValidFileTest.xml")]
         public void LoadValidFileTest()
         {
-            var loader = new Loader();
-            var results = loader.Parse("LoadValidFileTest.xml");
+            var sut = new Loader();
+            var results = sut.Parse("LoadValidFileTest.xml");
 
             // Typically we should aim for one assertion per test, but 
             // it's all part of one big XML read and I'll cut it short.
@@ -21,11 +21,11 @@ namespace Dipsy.VeracodeReport.Converter.UnitTests
             results.severity.Count.ShouldBe(6);
         }
 
-        [TestMethod, DeploymentItem("./xsd/LoadInvalidFileTest.xml")]
+        [TestMethod, DeploymentItem("./xml/LoadInvalidFileTest.xml")]
         public void LoadInvalidFileTest()
         {
-            var loader = new Loader();
-            Should.Throw<InvalidOperationException>(() => loader.Parse("LoadInvalidFileTest.xml"));
+            var sut = new Loader();
+            Should.Throw<InvalidOperationException>(() => sut.Parse("LoadInvalidFileTest.xml"));
         }
     }
 }
