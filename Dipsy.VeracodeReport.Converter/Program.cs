@@ -16,7 +16,6 @@ namespace Dipsy.VeracodeReport.Converter
         {
             ILoader loader = new Loader();
             ICSVFormatter csvFormatter = new CSVFormatter();
-            ICSVFlawWriter icsvWriter = new CSVFlawWriter(csvFormatter);
 
             try
             {
@@ -24,7 +23,16 @@ namespace Dipsy.VeracodeReport.Converter
 
                 var outputFileName = options.OutputFileName ?? detailedXml.app_name + ".csv";
 
-                icsvWriter.Write(detailedXml, outputFileName, options.IncludeFixedFlaws);
+                if (options.GenerateSCA)
+                {
+                    ICSVAnalysisWriter icsvWriter = new CSVAnalysisWriter(csvFormatter);
+                    icsvWriter.Write(detailedXml, outputFileName);
+                }
+                else
+                {
+                    ICSVFlawWriter icsvWriter = new CSVFlawWriter(csvFormatter);
+                    icsvWriter.Write(detailedXml, outputFileName, options.IncludeFixedFlaws);
+                }
             }
             catch (FileNotFoundException)
             {

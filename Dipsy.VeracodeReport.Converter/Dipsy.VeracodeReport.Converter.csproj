@@ -53,8 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSVAnalysisWriter.cs" />
     <Compile Include="CSVFlawWriter.cs" />
     <Compile Include="CSVFormatter.cs" />
+    <Compile Include="ICSVAnalysisWriter.cs" />
     <Compile Include="ICSVFlawWriter.cs" />
     <Compile Include="ICSVFormatter.cs" />
     <Compile Include="ILoader.cs" />

@@ -11,6 +11,7 @@ This is a build for .NET Framework, for Windows users who don't want to have to 
 * -i, --input     Required. Detailed XML file to be processed
 * -o, --output    Output filename
 * -f, --fixed     Include fixed flaws in the output
+* -s, --sca       Generate Software Composition Analysis report
 * --help          Display this help screen.
 * --version       Display version information.
 
