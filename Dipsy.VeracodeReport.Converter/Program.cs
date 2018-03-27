@@ -21,7 +21,8 @@ namespace Dipsy.VeracodeReport.Converter
             {
                 var detailedXml = loader.Parse(options.InputFileName);
 
-                var outputFileName = options.OutputFileName ?? detailedXml.app_name + ".csv";
+                var outputFileName = options.OutputFileName
+                                     ?? detailedXml.app_name + (options.GenerateSCA ? "_sca" : string.Empty) + ".csv";
 
                 if (options.GenerateSCA)
                 {
