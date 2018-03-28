@@ -4,6 +4,8 @@ using CommandLine;
 
 namespace Dipsy.VeracodeReport.Converter
 {
+    using Dipsy.VeracodeReport.Converter.Schema;
+
     public class Program
     {
         private static void Main(string[] args)
@@ -21,16 +23,16 @@ namespace Dipsy.VeracodeReport.Converter
             {
                 var detailedXml = loader.Parse(options.InputFileName);
 
-                var outputFileName = options.OutputFileName
-                                     ?? detailedXml.app_name + (options.GenerateSCA ? "_sca" : string.Empty) + ".csv";
-
-                if (options.GenerateSCA)
+                if (options.GenerateAnalysis)
                 {
+                    var outputFileName = GetFlawOutputFilename(options, detailedXml);
                     ICSVAnalysisWriter icsvWriter = new CSVAnalysisWriter(csvFormatter);
                     icsvWriter.Write(detailedXml, outputFileName);
                 }
-                else
+
+                if (options.GenerateFlaws)
                 {
+                    var outputFileName = GetAnalysisOutputFilename(options, detailedXml);
                     ICSVFlawWriter icsvWriter = new CSVFlawWriter(csvFormatter);
                     icsvWriter.Write(detailedXml, outputFileName, options.IncludeFixedFlaws);
                 }
@@ -39,6 +41,26 @@ namespace Dipsy.VeracodeReport.Converter
             {
                 Console.Error.WriteLine($"{options.InputFileName} not found");
             }
+        }
+
+        private static string GetFlawOutputFilename(Options options, detailedreport detailedXml)
+        {
+            return options.OutputFileName ?? detailedXml.app_name + ".csv";
+        }
+
+        private static string GetAnalysisOutputFilename(Options options, detailedreport detailedXml)
+        {
+            if (options.GenerateFlaws == false)
+            {
+                return options.OutputFileName ?? detailedXml.app_name + ".csv";
+            }
+
+            // If we're generating flaws and SCA, add _sca
+            var newFilename = Path.GetFileNameWithoutExtension(options.OutputFileName) + "_sca."
+                                                                                       + Path.GetExtension(
+                                                                                           options.OutputFileName);
+
+            return Path.Combine(Path.GetFullPath(options.OutputFileName), newFilename);
         }
     }
 }
