@@ -5,6 +5,9 @@ using Dipsy.VeracodeReport.Converter.Interfaces;
 
 namespace Dipsy.VeracodeReport.Converter
 {
+    using System.IO;
+    using System.Text;
+
     public class Program
     {
         private static void Main(string[] args)
@@ -23,9 +26,33 @@ namespace Dipsy.VeracodeReport.Converter
             try
             {
                 var detailedXml = loader.Parse(options.InputFileName);
+                var flawOutputFilename = csvFlawWriter.GetOutputFilename(detailedXml, options);
 
-                csvFlawWriter.Write(detailedXml, options);
-                csvAnalysisWriter.Write(detailedXml, options);
+                try
+                {
+                    using (var outFile = new StreamWriter(flawOutputFilename, false, Encoding.UTF8))
+                    {
+                        csvFlawWriter.Write(outFile, detailedXml, options);
+                    }
+                }
+                catch (IOException)
+                {
+                    Console.Error.WriteLine($"Error writing to {flawOutputFilename}");
+                }
+
+                var scaOutputFilename = csvAnalysisWriter.GetOutputFilename(detailedXml, options);
+
+                try
+                {
+                    using (var outFile = new StreamWriter(flawOutputFilename, false, Encoding.UTF8))
+                    {
+                        csvAnalysisWriter.Write(outFile, detailedXml, options);
+                    }
+                }
+                catch (IOException)
+                {
+                    Console.Error.WriteLine($"Error writing to {scaOutputFilename}");
+                }
             }
             catch (DetailedReportReadException ex)
             {

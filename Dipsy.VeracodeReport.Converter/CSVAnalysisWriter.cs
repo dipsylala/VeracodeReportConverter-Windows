@@ -15,45 +15,21 @@ namespace Dipsy.VeracodeReport.Converter
         {
         }
 
-        public void Write(detailedreport detailedXml, Options options)
+        public void Write(TextWriter outFile, detailedreport detailedXml, Options options)
         {
-            // Let the method  decide for itself whether it's run (it's responsible for itself)
-            if (options.GenerateAnalysis == false)
-            {
-                return;
-            }
+            ValidateWriteParameters(outFile, detailedXml, options);
 
-            ValidateWriteParameters(detailedXml, options);
-
-            var outputFilename = GetAnalysisOutputFilename(options, detailedXml);
-
-            try
-            {
-                using (var outFile = new StreamWriter(outputFilename, false, Encoding.UTF8))
-                {
-                    Write(outFile, detailedXml);
-                }
-            }
-            catch (IOException)
-            {
-                throw new CSVWriteException($"Error writing to {outputFilename}");
-            }
-        }
-
-        public void Write(TextWriter outFile, detailedreport detailedXml)
-        {
-            // Separated so that we can mock the Writer (and caller might have their own TextWriter derivative)
             WriteHeader(outFile);
-            WriteComponentsToFile(detailedXml.software_composition_analysis.vulnerable_components, outFile);
+            WriteComponents(detailedXml.software_composition_analysis.vulnerable_components, outFile);
         }
 
-        private static string GetAnalysisOutputFilename(Options options, detailedreport detailedXml)
+        public string GetOutputFilename(detailedreport detailedXml, Options options)
         {
             var baseFilename = options.OutputFileName ?? detailedXml.app_name + ".csv";
 
             // If we're generating flaws and SCA, add _sca
             var newFilename = Path.GetFileNameWithoutExtension(baseFilename) + "_sca"
-                                                                                   + Path.GetExtension(
+                                                                             + Path.GetExtension(
                                                                                  baseFilename);
             return Path.Combine(Path.GetDirectoryName(baseFilename), newFilename);
         }
@@ -71,7 +47,7 @@ namespace Dipsy.VeracodeReport.Converter
                     x.cve_summary == string.Empty ? "N/A" : x.cve_summary)));
         }
 
-        private void WriteComponentsToFile(IEnumerable<Component> components, TextWriter outFile)
+        private void WriteComponents(IEnumerable<Component> components, TextWriter outFile)
         {
             foreach (var component in components)
             {

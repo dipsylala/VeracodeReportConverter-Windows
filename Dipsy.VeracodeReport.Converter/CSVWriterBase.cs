@@ -5,6 +5,8 @@ using Dipsy.VeracodeReport.Converter.Schema;
 
 namespace Dipsy.VeracodeReport.Converter
 {
+    using System.IO;
+
     public abstract class CSVWriterBase
     {
         protected readonly ICSVFormatter CSVFormatter;
@@ -16,8 +18,13 @@ namespace Dipsy.VeracodeReport.Converter
             CSVFormatter = csvFormatter;
         }
 
-        protected void ValidateWriteParameters(detailedreport detailedXml, Options options)
+        protected void ValidateWriteParameters(TextWriter outFile, detailedreport detailedXml, Options options)
         {
+            if (outFile == null)
+            {
+                throw new ArgumentNullException(nameof(outFile));
+            }
+
             if (detailedXml == null)
             {
                 throw new ArgumentNullException(nameof(detailedXml));

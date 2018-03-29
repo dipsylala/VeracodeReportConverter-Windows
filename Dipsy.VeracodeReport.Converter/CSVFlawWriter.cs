@@ -18,28 +18,12 @@ namespace Dipsy.VeracodeReport.Converter
             PopulateSeverityCache();
         }
 
-        public void Write(detailedreport detailedXml, Options options)
+        public void Write(TextWriter outFile, detailedreport detailedXml, Options options)
         {
-            ValidateWriteParameters(detailedXml, options);
+            ValidateWriteParameters(outFile, detailedXml, options);
 
-            var outputFilename = GetFlawOutputFilename(options, detailedXml);
+            var includeFixed = options.IncludeFixedFlaws;
 
-            try
-            {
-                using (var outFile = new StreamWriter(outputFilename, false, Encoding.UTF8))
-                {
-                    Write(outFile, detailedXml, options.IncludeFixedFlaws);
-                }
-            }
-            catch (IOException)
-            {
-                throw new CSVWriteException($"Error writing to {outputFilename}");
-            }
-        }
-
-        public void Write(TextWriter outFile, detailedreport detailedXml, bool includeFixed)
-        {
-            // Separated so that we can mock the Writer (and caller might have their own TextWriter derivative)
             WriteHeader(outFile);
             foreach (var severity in detailedXml.severity)
             {
@@ -47,15 +31,15 @@ namespace Dipsy.VeracodeReport.Converter
                 {
                     foreach (var cwe in category.cwe)
                     {
-                        WriteFlawsToFile(cwe.staticflaws, outFile, includeFixed);
-                        WriteFlawsToFile(cwe.dynamicflaws, outFile, includeFixed);
-                        WriteFlawsToFile(cwe.manualflaws, outFile, includeFixed);
+                        WriteFlaws(cwe.staticflaws, outFile, includeFixed);
+                        WriteFlaws(cwe.dynamicflaws, outFile, includeFixed);
+                        WriteFlaws(cwe.manualflaws, outFile, includeFixed);
                     }
                 }
             }
         }
 
-        private static string GetFlawOutputFilename(Options options, detailedreport detailedXml)
+        public string GetOutputFilename(detailedreport detailedXml, Options options)
         {
             return options.OutputFileName ?? (detailedXml.app_name == null ? null : detailedXml.app_name + ".csv");
         }
@@ -70,7 +54,7 @@ namespace Dipsy.VeracodeReport.Converter
             return string.Join(DefaultMultilineSeparator, mitigations.Select(x => $"{x.date} ({x.user}) - {x.action}\n{x.description.TrimEnd('\n')}\n"));
         }
 
-        private void WriteFlawsToFile(IEnumerable<FlawType> flaws, TextWriter outFile, bool includeFixed)
+        private void WriteFlaws(IEnumerable<FlawType> flaws, TextWriter outFile, bool includeFixed)
         {
             foreach (var flaw in flaws.Where(x => includeFixed || x.remediation_status != "Fixed"))
             {
