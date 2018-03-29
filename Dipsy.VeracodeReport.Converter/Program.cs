@@ -8,6 +8,8 @@ namespace Dipsy.VeracodeReport.Converter
     using System.IO;
     using System.Text;
 
+    using Dipsy.VeracodeReport.Converter.Schema;
+
     public class Program
     {
         private static void Main(string[] args)
@@ -22,46 +24,49 @@ namespace Dipsy.VeracodeReport.Converter
             ICSVFormatter csvFormatter = new CSVFormatter();
             ICSVWriter csvFlawWriter = new CSVFlawWriter(csvFormatter);
             ICSVWriter csvAnalysisWriter = new CSVAnalysisWriter(csvFormatter);
+            detailedreport detailedXml;
 
             try
             {
-                var detailedXml = loader.Parse(options.InputFileName);
-                var flawOutputFilename = csvFlawWriter.GetOutputFilename(detailedXml, options);
-
-                try
-                {
-                    using (var outFile = new StreamWriter(flawOutputFilename, false, Encoding.UTF8))
-                    {
-                        csvFlawWriter.Write(outFile, detailedXml, options);
-                    }
-                }
-                catch (IOException)
-                {
-                    Console.Error.WriteLine($"Error writing to {flawOutputFilename}");
-                }
-
-                var scaOutputFilename = csvAnalysisWriter.GetOutputFilename(detailedXml, options);
-
-                try
-                {
-                    using (var outFile = new StreamWriter(flawOutputFilename, false, Encoding.UTF8))
-                    {
-                        csvAnalysisWriter.Write(outFile, detailedXml, options);
-                    }
-                }
-                catch (IOException)
-                {
-                    Console.Error.WriteLine($"Error writing to {scaOutputFilename}");
-                }
+                detailedXml = loader.Parse(options.InputFileName);
             }
-            catch (DetailedReportReadException ex)
+            catch (FileNotFoundException)
             {
-                Console.Error.WriteLine(ex.Message);
+                Console.Error.WriteLine($"Could not find {options.InputFileName}");
+                return;
             }
-            catch (CSVWriteException ex)
+            catch (InvalidOperationException ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                Console.Error.WriteLine($"Error parsing {options.InputFileName}: {ex.Message}");
+                return;
             }
+
+            var flawOutputFilename = csvFlawWriter.GetOutputFilename(detailedXml, options);
+            try
+            {
+                using (var outFile = new StreamWriter(flawOutputFilename, false, Encoding.UTF8))
+                {
+                    csvFlawWriter.Write(outFile, detailedXml, options);
+                }
+            }
+            catch (IOException)
+            {
+                Console.Error.WriteLine($"Error writing to {flawOutputFilename}");
+                return;
+            }
+
+            var scaOutputFilename = csvAnalysisWriter.GetOutputFilename(detailedXml, options);
+            try
+            {
+                using (var outFile = new StreamWriter(scaOutputFilename, false, Encoding.UTF8))
+                {
+                    csvAnalysisWriter.Write(outFile, detailedXml, options);
+                }
+            }
+            catch (IOException)
+            {
+                Console.Error.WriteLine($"Error writing to {scaOutputFilename}");
+            } 
         }
     }
 }

@@ -4,6 +4,8 @@ using Shouldly;
 
 namespace Dipsy.VeracodeReport.Converter.UnitTests
 {
+    using System.IO;
+
     [TestClass]
     public class LoaderTests
     {
@@ -26,6 +28,13 @@ namespace Dipsy.VeracodeReport.Converter.UnitTests
         {
             var sut = new Loader();
             Should.Throw<InvalidOperationException>(() => sut.Parse("LoadInvalidFileTest.xml"));
+        }
+
+        [TestMethod]
+        public void LoadNonExistentFileTest()
+        {
+            var sut = new Loader();
+            Should.Throw<FileNotFoundException>(() => sut.Parse(".xml"));
         }
     }
 }
