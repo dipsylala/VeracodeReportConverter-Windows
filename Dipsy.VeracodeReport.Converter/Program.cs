@@ -55,6 +55,11 @@ namespace Dipsy.VeracodeReport.Converter
                 return;
             }
 
+            if (options.GenerateAnalysis == false)
+            {
+                return;
+            }
+
             var scaOutputFilename = csvAnalysisWriter.GetOutputFilename(detailedXml, options);
             try
             {

@@ -18,7 +18,6 @@ namespace Dipsy.VeracodeReport.Converter
         public void Write(TextWriter outFile, detailedreport detailedXml, Options options)
         {
             ValidateWriteParameters(outFile, detailedXml, options);
-
             WriteHeader(outFile);
             WriteComponents(detailedXml.software_composition_analysis.vulnerable_components, outFile);
         }
