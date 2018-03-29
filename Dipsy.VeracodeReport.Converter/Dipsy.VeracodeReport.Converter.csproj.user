@@ -11,4 +11,7 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>-i c:\users\marcu\downloads\drp\1\1.xml -s -o c:\users\macrcu\downloads\drp\1\1.csv</StartArguments>
+  </PropertyGroup>
 </Project>

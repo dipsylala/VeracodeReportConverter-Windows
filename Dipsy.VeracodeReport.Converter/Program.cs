@@ -1,11 +1,10 @@
 ﻿using System;
-using System.IO;
 using CommandLine;
+
+using Dipsy.VeracodeReport.Converter.Interfaces;
 
 namespace Dipsy.VeracodeReport.Converter
 {
-    using Dipsy.VeracodeReport.Converter.Schema;
-
     public class Program
     {
         private static void Main(string[] args)
@@ -18,49 +17,24 @@ namespace Dipsy.VeracodeReport.Converter
         {
             ILoader loader = new Loader();
             ICSVFormatter csvFormatter = new CSVFormatter();
+            ICSVWriter csvFlawWriter = new CSVFlawWriter(csvFormatter);
+            ICSVWriter csvAnalysisWriter = new CSVAnalysisWriter(csvFormatter);
 
             try
             {
                 var detailedXml = loader.Parse(options.InputFileName);
 
-                if (options.GenerateAnalysis)
-                {
-                    var outputFileName = GetFlawOutputFilename(options, detailedXml);
-                    ICSVAnalysisWriter icsvWriter = new CSVAnalysisWriter(csvFormatter);
-                    icsvWriter.Write(detailedXml, outputFileName);
-                }
-
-                if (options.GenerateFlaws)
-                {
-                    var outputFileName = GetAnalysisOutputFilename(options, detailedXml);
-                    ICSVFlawWriter icsvWriter = new CSVFlawWriter(csvFormatter);
-                    icsvWriter.Write(detailedXml, outputFileName, options.IncludeFixedFlaws);
-                }
+                csvFlawWriter.Write(detailedXml, options);
+                csvAnalysisWriter.Write(detailedXml, options);
             }
-            catch (FileNotFoundException)
+            catch (DetailedReportReadException ex)
             {
-                Console.Error.WriteLine($"{options.InputFileName} not found");
+                Console.Error.WriteLine(ex.Message);
             }
-        }
-
-        private static string GetFlawOutputFilename(Options options, detailedreport detailedXml)
-        {
-            return options.OutputFileName ?? detailedXml.app_name + ".csv";
-        }
-
-        private static string GetAnalysisOutputFilename(Options options, detailedreport detailedXml)
-        {
-            if (options.GenerateFlaws == false)
+            catch (CSVWriteException ex)
             {
-                return options.OutputFileName ?? detailedXml.app_name + ".csv";
+                Console.Error.WriteLine(ex.Message);
             }
-
-            // If we're generating flaws and SCA, add _sca
-            var newFilename = Path.GetFileNameWithoutExtension(options.OutputFileName) + "_sca."
-                                                                                       + Path.GetExtension(
-                                                                                           options.OutputFileName);
-
-            return Path.Combine(Path.GetFullPath(options.OutputFileName), newFilename);
         }
     }
 }

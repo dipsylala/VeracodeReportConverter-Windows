@@ -75,9 +75,11 @@
     <Compile Include="CSVAnalysisWriter.cs" />
     <Compile Include="CSVFlawWriter.cs" />
     <Compile Include="CSVFormatter.cs" />
-    <Compile Include="ICSVAnalysisWriter.cs" />
-    <Compile Include="ICSVFlawWriter.cs" />
-    <Compile Include="ICSVFormatter.cs" />
+    <Compile Include="CSVWriteException.cs" />
+    <Compile Include="CSVWriterBase.cs" />
+    <Compile Include="DetailedReportReadException.cs" />
+    <Compile Include="Interfaces\ICSVWriter.cs" />
+    <Compile Include="Interfaces\ICSVFormatter.cs" />
     <Compile Include="ILoader.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Options.cs" />

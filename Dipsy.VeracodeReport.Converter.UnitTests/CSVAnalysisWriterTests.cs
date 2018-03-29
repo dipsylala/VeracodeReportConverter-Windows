@@ -14,14 +14,14 @@ using Shouldly;
 namespace Dipsy.VeracodeReport.Converter.UnitTests
 {
     [TestClass]
-    public class CSVFlawWriterTests
+    public class CSVAnalysisWriterTests
     {
         [TestMethod]
         public void ExceptionShouldBeThrownWhenNullReport()
         {
             var mockFormatter = new Mock<ICSVFormatter>();
             var options = new Options { OutputFileName = "output.csv" };
-            var sut = new CSVFlawWriter(mockFormatter.Object);
+            var sut = new CSVAnalysisWriter(mockFormatter.Object);
 
             Should.Throw<ArgumentNullException>(() => sut.Write(null, options));
         }
@@ -31,22 +31,22 @@ namespace Dipsy.VeracodeReport.Converter.UnitTests
         {
             var mockFormatter = new Mock<ICSVFormatter>();
             var detailedReport = new detailedreport();
-            var sut = new CSVFlawWriter(mockFormatter.Object);
+            var sut = new CSVAnalysisWriter(mockFormatter.Object);
 
             Should.Throw<ArgumentNullException>(() => sut.Write(detailedReport, null));
         }
 
-        [TestMethod, DeploymentItem("./xml/LoadValidStaticFileTest.xml")]
-        public void ShouldLoadStaticResults()
+        [TestMethod, DeploymentItem("./xml/LoadValidStaticFileWithSCATest.xml")]
+        public void ShouldLoadStaticResultsWithSCA()
         {
-            var detailedReport = detailedreport.LoadFromFile("LoadValidStaticFileTest.xml");
+            var detailedReport = detailedreport.LoadFromFile("LoadValidStaticFileWithSCATest.xml");
             var mockFormatter = new Mock<ICSVFormatter>();
 
             using (var resultStream = new MemoryStream())
             using (var resultWriter = new StreamWriter(resultStream))
             {
-                var sut = new CSVFlawWriter(mockFormatter.Object);
-                sut.Write(resultWriter, detailedReport, false);
+                var sut = new CSVAnalysisWriter(mockFormatter.Object);
+                sut.Write(resultWriter, detailedReport);
                 resultWriter.Flush();
             }
 
