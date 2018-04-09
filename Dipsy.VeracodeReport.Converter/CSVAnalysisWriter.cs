@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 using Dipsy.VeracodeReport.Converter.Interfaces;
 using Dipsy.VeracodeReport.Converter.Schema;

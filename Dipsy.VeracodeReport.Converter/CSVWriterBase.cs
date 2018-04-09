@@ -1,12 +1,11 @@
 ﻿using System;
+using System.IO;
 
 using Dipsy.VeracodeReport.Converter.Interfaces;
 using Dipsy.VeracodeReport.Converter.Schema;
 
 namespace Dipsy.VeracodeReport.Converter
 {
-    using System.IO;
-
     public abstract class CSVWriterBase
     {
         protected readonly ICSVFormatter CSVFormatter;

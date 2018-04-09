@@ -1,15 +1,14 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+
 using CommandLine;
 
 using Dipsy.VeracodeReport.Converter.Interfaces;
+using Dipsy.VeracodeReport.Converter.Schema;
 
 namespace Dipsy.VeracodeReport.Converter
 {
-    using System.IO;
-    using System.Text;
-
-    using Dipsy.VeracodeReport.Converter.Schema;
-
     public class Program
     {
         private static void Main(string[] args)
