@@ -26,6 +26,7 @@ Takes a detailed xml report from the Veracode platform and generates a CSV file 
                 Mitigation Text
 
 It can also optionally output SCA details into another file:
+
                 Library
                 Version
                 Vendor
