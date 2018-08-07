@@ -25,7 +25,21 @@ Takes a detailed xml report from the Veracode platform and generates a CSV file 
                 Mitigation Status Description
                 Mitigation Text
 
-It can also optionally output SCA details into another file.
+It can also optionally output SCA details into another file:
+                Library
+                Version
+                Vendor
+                Description
+                File Paths
+                Licenses
+                Max CVSS Score
+                Affects Policy Compliance
+                Violated Policy Rules
+                Vulnerabilities (Very Low)
+                Vulnerabilities (Low)
+                Vulnerabilities (Medium)
+                Vulnerabilities (High)
+                Vulnerabilities (Very High)
 
 The Veracode Help Center provides guidance on how to retrieve the detailed xml report here: https://help.veracode.com/reader/DGHxSJy3Gn3gtuSIN2jkRQ/wtJ0ZMLZcYuRd22PmK5vxg
 
