@@ -13,6 +13,7 @@ Takes a detailed xml report from the Veracode platform and generates a CSV file 
                 Module
                 Source File
                 Source File Path
+                Attack Vector
                 Function Prototype
                 Line
                 Function Relative Location (%)

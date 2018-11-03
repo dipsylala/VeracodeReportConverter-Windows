@@ -77,6 +77,7 @@ namespace Dipsy.VeracodeReport.Converter
                 "Module",
                 "Source File",
                 "Source File Path",
+                "Attack Vector",
                 "Function Prototype",
                 "Line",
                 "Function Relative Location (%)",
@@ -114,6 +115,7 @@ namespace Dipsy.VeracodeReport.Converter
                         flaw.module,
                         flaw.sourcefile,
                         flaw.sourcefilepath,
+                        flaw.type,
                         flaw.functionprototype,
                         flaw.line,
                         flaw.functionrelativelocation == "-1"
